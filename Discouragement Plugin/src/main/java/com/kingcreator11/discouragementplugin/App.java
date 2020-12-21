@@ -1,4 +1,5 @@
 package com.kingcreator11.discouragementplugin;
+
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class App extends JavaPlugin {
