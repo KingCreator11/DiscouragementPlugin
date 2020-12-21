@@ -24,3 +24,6 @@ hs_err_pid*
 
 # Vs code settings
 .vscode/
+
+# Mac ds store files
+.DS_Store
