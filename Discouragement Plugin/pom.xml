@@ -9,7 +9,7 @@
 	<version>0.1</version>
 	<packaging>jar</packaging>
 
-	<name>Discouragement Plugin</name>
+	<name>DiscouragementPlugin</name>
 	<url>https://github.com/KingCreator11/DiscouragementPlugin</url>
 
 	<properties>
@@ -17,6 +17,14 @@
 		<maven.compiler.source>1.7</maven.compiler.source>
 		<maven.compiler.target>1.7</maven.compiler.target>
 	</properties>
+
+
+	<repositories>
+		<repository>
+			<id>spigot-repo</id>
+			<url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+		</repository>
+	</repositories>
 
 	<dependencies>
 		<dependency>
@@ -26,13 +34,6 @@
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>
-
-	<repositories>
-		<repository>
-			<id>spigot-repo</id>
-			<url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
-		</repository>
-	</repositories>
 
 	<build>
 		<sourceDirectory>${project.basedir}/src/main/java</sourceDirectory>
