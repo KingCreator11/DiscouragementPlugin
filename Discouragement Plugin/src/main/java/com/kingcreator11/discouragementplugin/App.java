@@ -5,6 +5,7 @@
 
 package com.kingcreator11.discouragementplugin;
 
+import com.kingcreator11.discouragementplugin.Commands.DiscouragementCommand;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -14,6 +15,7 @@ public class App extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		getLogger().info("Discouragement Plugin Enabled");
+		this.getCommand("discouragement").setExecutor(new DiscouragementCommand());
 	}
 	
 	@Override
