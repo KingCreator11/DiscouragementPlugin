@@ -25,8 +25,7 @@ public class DiscouragementCommand implements CommandExecutor, TabCompleter {
 	 */
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-
-		return false;
+		return true;
 	}
 
 	/**
@@ -38,21 +37,21 @@ public class DiscouragementCommand implements CommandExecutor, TabCompleter {
 		String[] commands = {"lvl1", "lvl2", "lvl3", "remove"};
 
 		// Blank command - offer the list of sub commands
-		if (args.length == 0) {
+		if (args.length <= 1) {
 			return Arrays.asList(commands);
 		}
 
-		// One argument - sub command
-		if (args.length == 1) {
+		// Two argument - sub command
+		if (args.length == 2) {
 			// Perform linear search to check if the sub command is valid
 			boolean found = false;
 			for (String subCommand : commands)
-				if (subCommand == args[0])
+				if (subCommand.equals(args[0]))
 					found = true;
 
 			// Invalid sub command - no tab completion offered
 			if (!found)
-				return null;
+				return new ArrayList<>();
 			
 			// All sub commands have a player as the second argument - offer player list as tab completion
 			List<Player> playerList = new ArrayList<>(Bukkit.getOnlinePlayers());
@@ -64,6 +63,6 @@ public class DiscouragementCommand implements CommandExecutor, TabCompleter {
 		}
 
 		// More than one argument, no tab completion offered
-		return null;
+		return new ArrayList<>();
 	}
 }
