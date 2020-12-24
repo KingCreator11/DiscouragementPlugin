@@ -20,6 +20,27 @@ import org.bukkit.entity.Player;
  * The Main discouragement command, implements all sub commands as well.
  */
 public class DiscouragementCommand implements CommandExecutor, TabCompleter {
+
+	/**
+	 * Array of commands
+	 */
+	public static final String[] commands = {
+		"lvl1",
+		"lvl2",
+		"lvl3",
+		"remove"
+	};
+
+	/**
+	 * Array of permissions to match commands - indices match with commands as well.
+	 */
+	public static final String[] permissions = {
+		"discouragement.command.level.1",
+		"discouragement.command.level.2",
+		"discouragement.command.level.3",
+		"discouragement.command.level.remove"
+	};
+
 	/**
 	 * Calls when the command is run
 	 */
@@ -33,19 +54,19 @@ public class DiscouragementCommand implements CommandExecutor, TabCompleter {
 	 */
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-		// Sub commands list
-		String[] commands = {"lvl1", "lvl2", "lvl3", "remove"};
+		// Filter out commands based on what perms the user has
+		String[] availableCommands = commands.clone();
 
 		// Blank command - offer the list of sub commands
 		if (args.length <= 1) {
-			return Arrays.asList(commands);
+			return Arrays.asList(availableCommands);
 		}
 
 		// Two argument - sub command
 		if (args.length == 2) {
 			// Perform linear search to check if the sub command is valid
 			boolean found = false;
-			for (String subCommand : commands)
+			for (String subCommand : availableCommands)
 				if (subCommand.equals(args[0]))
 					found = true;
 
