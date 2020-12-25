@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.kingcreator11.discouragementplugin.PermissionsManager;
+
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -55,11 +57,19 @@ public class DiscouragementCommand implements CommandExecutor, TabCompleter {
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
 		// Filter out commands based on what perms the user has
-		String[] availableCommands = commands.clone();
+		ArrayList<String> availableCommands = new ArrayList<>(Arrays.asList(commands));
+
+		// Linear search through perms for commands
+		for (int i = permissions.length - 1; i >= 0; i--) {
+			// If the player has the perm continue
+			if (PermissionsManager.hasPermMax(sender, permissions[i])) continue;
+			// The player does not have the perm so remove the command
+			else availableCommands.remove(i);
+		}
 
 		// Blank command - offer the list of sub commands
 		if (args.length <= 1) {
-			return Arrays.asList(availableCommands);
+			return availableCommands;
 		}
 
 		// Two argument - sub command

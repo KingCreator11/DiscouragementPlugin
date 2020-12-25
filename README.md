@@ -1,10 +1,8 @@
 # Discouragement Plugin
 Have annoying players on your spigot minecraft server which you just can't seem to get rid of? Try this plugin!
 
-**Requires [Vault](https://www.spigotmc.org/resources/vault.34315/) to work!**
-
 ## Commands
-**Note**: Giving a player `discouragement.command.level.3` will give them the permission to use all levels of the command below 3 including 3.
+**Note**: Giving a player `discouragement.command.level.3` will give them the permission to use all levels of the command below 3 including 3.<br>
 **Side Note**: It is recommended that you give `discouragement.command.remove` to anyone at who has perms for any level of the command.
 | Command | Description | Permissions |
 |---------|-------------|-------------|
