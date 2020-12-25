@@ -15,6 +15,7 @@ public class App extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		getLogger().info("Discouragement Plugin Enabled");
+		PermissionsManager.setPlugin(this);
 		this.getCommand("discouragement").setExecutor(new DiscouragementCommand());
 	}
 	

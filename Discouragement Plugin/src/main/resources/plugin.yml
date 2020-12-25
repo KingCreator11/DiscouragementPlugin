@@ -6,3 +6,18 @@ commands:
     description: Lists all discouragement commands along with their descriptions
     usage: /discouragement
     permission: discouragement.command.help
+permissions:
+  discouragement.command.help:
+    description: Gives access to the discouragement base command, no other discouragement commands can be used without having perms to this command.
+  discouragement.command.level.1:
+    description: Gives access to /discouragement lvl1 to set level 1 discouragement on a player
+  discouragement.command.level.2:
+    description: Gives access to /discouragement lvl1 to set level 2 discouragement on a player
+  discouragement.command.level.3:
+    description: Gives access to /discouragement lvl1 to set level 3 discouragement on a player
+  discouragement.level.1:
+    description: Sets level 1 discouragement on a player - Must be done through command otherwise restart is required
+  discouragement.level.2:
+    description: Sets level 2 discouragement on a player - Must be done through command otherwise restart is required
+  discouragement.level.3:
+    description: Sets level 3 discouragement on a player - Must be done through command otherwise restart is required

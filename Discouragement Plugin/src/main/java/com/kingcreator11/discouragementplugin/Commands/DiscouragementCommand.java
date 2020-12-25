@@ -45,6 +45,16 @@ public class DiscouragementCommand implements CommandExecutor, TabCompleter {
 	};
 
 	/**
+	 * Array of permissions to give discouragement. Indices match with commands
+	 * `remove` has no discouragement perm
+	 */
+	public static final String[] discouragementPerms = {
+		"discouragement.level.1",
+		"discouragement.level.2",
+		"discouragement.level.3"
+	};
+
+	/**
 	 * Checks whether or not a sender has the perms to run a sub command
 	 * @param sender The sender of the command
 	 * @param command The sub command
@@ -72,7 +82,7 @@ public class DiscouragementCommand implements CommandExecutor, TabCompleter {
 		// Linear search through perms for commands
 		for (int i = permissions.length - 1; i >= 0; i--) {
 			// If the player has the perm continue
-			if (PermissionsManager.hasPermMax(sender, permissions[i])) continue;
+			if (PermissionsManager.hasPermMax(sender, permissions[i], 1, 3)) continue;
 			// The player does not have the perm so remove the command
 			else availableCommands.remove(i);
 		}
@@ -85,10 +95,23 @@ public class DiscouragementCommand implements CommandExecutor, TabCompleter {
 	 */
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		// Check if the sender has sufficient privelages
-		if (!hasPerms(sender, args[1])) return false;
+		if (args.length != 2) {
+			sender.sendMessage("Invalid arguments");
+		}
 
-		
+		// Check if the sender has sufficient Privileges
+		if (!hasPerms(sender, args[0])) {
+			sender.sendMessage("Insufficient Privileges");
+			return false;
+		}
+
+		// Get the player object
+		Player player = Bukkit.getPlayer(args[1]);
+		if (player == null) {
+			sender.sendMessage("Player not found");
+			return false;
+		}
+
 		return true;
 	}
 
@@ -105,7 +128,7 @@ public class DiscouragementCommand implements CommandExecutor, TabCompleter {
 		// Two argument - sub command
 		if (args.length == 2) {
 			// Player doesn't have perms for this command
-			if (!hasPerms(sender, args[1]))
+			if (!hasPerms(sender, args[0]))
 				return new ArrayList<>();
 			
 			// All sub commands have a player as the second argument - offer player list as tab completion

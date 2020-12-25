@@ -20,6 +20,19 @@ import org.bukkit.permissions.PermissionAttachment;
 public class PermissionsManager {
 
 	/**
+	 * Pointer to the plugin
+	 */
+	private static App plugin;
+
+	/**
+	 * Sets the instance of the plugin pointer
+	 * @param app The pointer to the plugin
+	 */
+	public static void setPlugin(App app) {
+		plugin = app;
+	}
+
+	/**
 	 * Removes the numbers at the end of a permission for checking permission values
 	 * 
 	 * Example:
@@ -64,6 +77,7 @@ public class PermissionsManager {
 			PermissionAttachment attachment = permsInfoObject.getAttachment();
 			// Null check
 			if (attachment == null) continue;
+
 			Map<String, Boolean> perms = attachment.getPermissions();
 
 			// Linearly search all perms
@@ -85,6 +99,31 @@ public class PermissionsManager {
 				}
 			}
 		}
+
+		return highest;
+	}
+
+	/**
+	 * Retrieves the highest permission number from a certain permission
+	 * Does **NOT** Support negative permissions
+	 * 
+	 * Example: 
+	 * `getHighestPerm(entity, "discouragement.command.level", 1, 3)` -> 2
+	 * When the entity has the following perms:
+	 * `["discouragement.command.level.1", "discouragement.command.level.2"]`
+	 * 
+	 * @param permissible The entity to check
+	 * @param perm The permission to check
+	 * @param min The minimum possible perm number
+	 * @param max The highest possible perm number
+	 * @return The highest permission number OR -1 if the perm was not found
+	 */
+	public static int getHighestPerm(Permissible permissible, String perm, int min, int max) {
+		int highest = -1;
+
+		for (int i = min; i <= max; i++)
+			if (permissible.hasPermission(perm + "." + i))
+				highest = i;
 
 		return highest;
 	}
@@ -123,5 +162,59 @@ public class PermissionsManager {
 		int highestPerm = getHighestPerm(permissible, stripped);
 
 		return highestPerm >= permCheck;
+	}
+
+	/**
+	 * Whether or not a permissible has a certain permission
+	 * Does **NOT** Support negative permissions
+	 * 
+	 * Example:
+	 * `hasPermMax(entity, "discouragement.command.level.2", 1, 3)` -> true
+	 * When the entity has the following perms:
+	 * `["discouragement.command.level.3"]`
+	 * 
+	 * @param permissible The entity to check
+	 * @param perm The permission to check
+	 * @param min The minimum possible perm number
+	 * @param max The maximum possible perm number
+	 * @return Whether or not the permissible has the perm
+	 */
+	public static boolean hasPermMax(Permissible permissible, String perm, int min, int max) {
+		// If it has the permission then return true
+		if (permissible.hasPermission(perm)) {
+			return true;
+		}
+		
+		// Otherwise call getHighestPerm and check if the highest perm the permissible has is
+		// greater than the last digit
+		int permCheck = 0;
+		try {
+			permCheck = Integer.parseInt(perm.substring(perm.lastIndexOf('.')+1));
+		}
+		catch (NumberFormatException e) {
+			// Last part of perm isn't a number
+			return false;
+		}
+
+		String stripped = stripPerm(perm);
+		int highestPerm = getHighestPerm(permissible, stripped, min, max);
+
+		return highestPerm >= permCheck;
+	}
+
+	/**
+	 * Sets a permission on a permissible
+	 * @param permissible The permissible to give the perm to
+	 * @param perm The perm to give
+	 * @param value The value of the perm (`true` to give the perm `false` to remove it)
+	 */
+	public static void setPerm(Permissible permissible, String perm, boolean value) {
+		// Linear search through perm attachments
+		for (PermissionAttachmentInfo attachment : permissible.getEffectivePermissions()) {
+			// If the attachment isn't from this plugin we can ignore it
+			if (attachment.getAttachment().getPlugin() != plugin) continue;
+			// Set the permission
+			attachment.getAttachment().setPermission(perm, value);
+		}
 	}
 }
