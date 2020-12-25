@@ -17,6 +17,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.bukkit.permissions.Permissible;
 
 /**
  * The Main discouragement command, implements all sub commands as well.
@@ -44,18 +45,27 @@ public class DiscouragementCommand implements CommandExecutor, TabCompleter {
 	};
 
 	/**
-	 * Calls when the command is run
+	 * Checks whether or not a sender has the perms to run a sub command
+	 * @param sender The sender of the command
+	 * @param command The sub command
+	 * @return Whether or not the sender has the perms to execute the command
 	 */
-	@Override
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		return true;
+	private boolean hasPerms(Permissible sender, String command) {
+		ArrayList<String> availableCommands = getAvailableCommands(sender);
+		// Perform linear search to check if the sub command is valid
+		boolean found = false;
+		for (String subCommand : availableCommands)
+			if (subCommand.equals(command))
+				found = true;
+		return found;
 	}
 
 	/**
-	 * Called to get command completion
+	 * Returns a list of all available sub commands byc hecking through perms
+	 * @param sender The sender of the command
+	 * @return The list of sub commands
 	 */
-	@Override
-	public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+	private ArrayList<String> getAvailableCommands(Permissible sender) {
 		// Filter out commands based on what perms the user has
 		ArrayList<String> availableCommands = new ArrayList<>(Arrays.asList(commands));
 
@@ -67,21 +77,35 @@ public class DiscouragementCommand implements CommandExecutor, TabCompleter {
 			else availableCommands.remove(i);
 		}
 
+		return availableCommands;
+	}
+
+	/**
+	 * Calls when the command is run
+	 */
+	@Override
+	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+		// Check if the sender has sufficient privelages
+		if (!hasPerms(sender, args[1])) return false;
+
+		
+		return true;
+	}
+
+	/**
+	 * Called to get command completion
+	 */
+	@Override
+	public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
 		// Blank command - offer the list of sub commands
 		if (args.length <= 1) {
-			return availableCommands;
+			return getAvailableCommands(sender);
 		}
 
 		// Two argument - sub command
 		if (args.length == 2) {
-			// Perform linear search to check if the sub command is valid
-			boolean found = false;
-			for (String subCommand : availableCommands)
-				if (subCommand.equals(args[0]))
-					found = true;
-
-			// Invalid sub command - no tab completion offered
-			if (!found)
+			// Player doesn't have perms for this command
+			if (!hasPerms(sender, args[1]))
 				return new ArrayList<>();
 			
 			// All sub commands have a player as the second argument - offer player list as tab completion
