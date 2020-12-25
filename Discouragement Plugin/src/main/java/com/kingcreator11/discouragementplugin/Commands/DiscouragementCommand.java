@@ -96,20 +96,41 @@ public class DiscouragementCommand implements CommandExecutor, TabCompleter {
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		if (args.length != 2) {
-			sender.sendMessage("Invalid arguments");
+			sender.sendMessage("§cInvalid arguments");
+			return true;
 		}
 
 		// Check if the sender has sufficient Privileges
 		if (!hasPerms(sender, args[0])) {
-			sender.sendMessage("Insufficient Privileges");
-			return false;
+			sender.sendMessage("§cInsufficient Privileges");
+			return true;
 		}
 
 		// Get the player object
 		Player player = Bukkit.getPlayer(args[1]);
 		if (player == null) {
-			sender.sendMessage("Player not found");
-			return false;
+			sender.sendMessage("§cPlayer not found");
+			return true;
+		}
+
+		// Always remove all other discouragement perms before setting the next level just for cleanliness
+		// This code also takes care of /discouragement remove ign
+		for (int i = 0; i < discouragementPerms.length; i++) {
+			PermissionsManager.setPerm(player, discouragementPerms[i], false);
+		}
+
+		if (args[0].equals("remove")) {
+			sender.sendMessage("§2Reset discouragement permissions for "+player.getPlayerListName());
+			return true;
+		}
+
+		// Linear search through commands to set the level
+		for (int i = 0; i < 3; i++) {
+			// We can skip it if it isn't the command being used
+			if (!commands[i].equals(args[0])) continue;
+			// Set the permission to be true for the correct command
+			PermissionsManager.setPerm(player, discouragementPerms[i], true);
+			sender.sendMessage("§2Set discouragement level "+(i+1)+" for "+player.getPlayerListName());
 		}
 
 		return true;

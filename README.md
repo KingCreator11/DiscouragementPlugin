@@ -4,6 +4,7 @@ Have annoying players on your spigot minecraft server which you just can't seem 
 ## Commands
 **Note**: Giving a player `discouragement.command.level.3` will give them the permission to use all levels of the command below 3 including 3.  
 **Side Note**: It is recommended that you give `discouragement.command.remove` to anyone at who has perms for any level of the command.
+Using `/discouragement lvl1` on a player with level 3 discouragement will remove the level 3 discouragement and set level 1 discouragement on the user.
 | Command | Description | Permissions |
 |---------|-------------|-------------|
 | /discouragement | Lists all discouragement commands along with their descriptions | discouragement.command.help |

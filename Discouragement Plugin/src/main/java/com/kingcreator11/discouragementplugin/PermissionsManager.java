@@ -209,12 +209,27 @@ public class PermissionsManager {
 	 * @param value The value of the perm (`true` to give the perm `false` to remove it)
 	 */
 	public static void setPerm(Permissible permissible, String perm, boolean value) {
+		boolean found = false;
 		// Linear search through perm attachments
-		for (PermissionAttachmentInfo attachment : permissible.getEffectivePermissions()) {
+		for (PermissionAttachmentInfo attachmentInfo : permissible.getEffectivePermissions()) {
+			// Check if attachmentInfo is null
+			if (attachmentInfo == null) continue;
+			// Get the attachment
+			PermissionAttachment attachment = attachmentInfo.getAttachment();
+			// Check if the attachment is null
+			if (attachment == null) continue;
 			// If the attachment isn't from this plugin we can ignore it
-			if (attachment.getAttachment().getPlugin() != plugin) continue;
+			if (attachment.getPlugin() != plugin) continue;
+			
+			found = true;
 			// Set the permission
-			attachment.getAttachment().setPermission(perm, value);
+			attachment.setPermission(perm, value);
 		}
+
+		if (found) return;
+
+		// The attachment hasn't been set yet so we have to do that manually
+		PermissionAttachment attachment = permissible.addAttachment(plugin);
+		attachment.setPermission(perm, value);
 	}
 }
