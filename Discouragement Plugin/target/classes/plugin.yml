@@ -1,6 +1,6 @@
 main: com.kingcreator11.discouragementplugin.App
 name: DiscouragementPlugin
-version: 0.1
+version: 1.0
 commands:
   discouragement:
     description: Lists all discouragement commands along with their descriptions
