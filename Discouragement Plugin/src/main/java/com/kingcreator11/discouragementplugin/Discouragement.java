@@ -15,6 +15,8 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -51,6 +53,9 @@ public abstract class Discouragement implements Listener {
 	private double maxTeleportationTime = 0;
 	private double minTeleportationInterval = 0;
 	private double maxTeleportationInterval = 0;
+
+	// Block placement/breaking failure chance
+	protected double blockFailChance = 0;
 
 	/**
 	 * The queue of chat messages which are delayed
@@ -288,5 +293,29 @@ public abstract class Discouragement implements Listener {
 		event.setCancelled(true);
 
 		this.delayedChatMessage(player, event.getMessage());
+	}
+
+	/**
+	 * Block placement event handler
+	 * @param event
+	 */
+	@EventHandler
+	public void onBlockPlace(BlockPlaceEvent event) {
+		Player player = event.getPlayer();
+		if (!this.playerList.contains(player)) return;
+		if (Math.random() > blockFailChance) return;
+		event.setCancelled(true);
+	}
+
+	/**
+	 * Block breaking event handler
+	 * @param event
+	 */
+	@EventHandler
+	public void onBlockBreak(BlockBreakEvent event) {
+		Player player = event.getPlayer();
+		if (!this.playerList.contains(player)) return;
+		if (Math.random() > blockFailChance) return;
+		event.setCancelled(true);
 	}
 }

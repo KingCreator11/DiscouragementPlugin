@@ -18,6 +18,7 @@ public class DiscouragementLvl3 extends Discouragement {
 		this.plugin = plugin;
 		setPermissionString("discouragement.level.3");
 		setChatDelay(0, 30);
+		blockFailChance = 0.5;
 		updatePlayerList();
 		startRandomTeleports(1, 10, 10, 20);
 	}
