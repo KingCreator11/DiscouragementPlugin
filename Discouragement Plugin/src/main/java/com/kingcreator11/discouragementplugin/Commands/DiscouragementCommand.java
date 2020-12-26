@@ -13,6 +13,7 @@ import com.kingcreator11.discouragementplugin.DiscouragementLvl1;
 import com.kingcreator11.discouragementplugin.DiscouragementLvl2;
 import com.kingcreator11.discouragementplugin.DiscouragementLvl3;
 import com.kingcreator11.discouragementplugin.PermissionsManager;
+import com.kingcreator11.discouragementplugin.App;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -119,7 +120,7 @@ public class DiscouragementCommand implements CommandExecutor, TabCompleter {
 		// Always remove all other discouragement perms before setting the next level just for cleanliness
 		// This code also takes care of /discouragement remove ign
 		for (int i = 0; i < discouragementPerms.length; i++) {
-			PermissionsManager.setPerm(player, discouragementPerms[i], false);
+			App.getPermissions().playerRemove(player, discouragementPerms[i]);
 		}
 
 		// Send remove message
@@ -139,7 +140,7 @@ public class DiscouragementCommand implements CommandExecutor, TabCompleter {
 			// We can skip it if it isn't the command being used
 			if (!commands[i].equals(args[0])) continue;
 			// Set the permission to be true for the correct command
-			PermissionsManager.setPerm(player, discouragementPerms[i], true);
+			App.getPermissions().playerAdd(player, discouragementPerms[i]);
 			
 			if (i == 0) DiscouragementLvl1.instance.addPlayer(player);
 			if (i == 1) DiscouragementLvl2.instance.addPlayer(player);
