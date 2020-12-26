@@ -21,8 +21,4 @@ public class DiscouragementLvl3 extends Discouragement {
 		updatePlayerList();
 		startRandomTeleports(1, 10, 10, 20);
 	}
-
-	public void updatePlayerList() {
-		updatePlayerList("discouragement.level.3");
-	}
 }

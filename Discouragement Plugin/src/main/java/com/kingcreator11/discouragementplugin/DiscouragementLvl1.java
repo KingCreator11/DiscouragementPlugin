@@ -20,8 +20,4 @@ public class DiscouragementLvl1 extends Discouragement {
 		setChatDelay(0, 5);
 		updatePlayerList();
 	}
-
-	public void updatePlayerList() {
-		updatePlayerList("discouragement.level.1");
-	}
 }

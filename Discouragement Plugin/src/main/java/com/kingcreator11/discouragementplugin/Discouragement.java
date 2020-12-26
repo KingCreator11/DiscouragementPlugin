@@ -114,8 +114,8 @@ public abstract class Discouragement implements Listener {
 	 * Updates the player list from the permission
 	 * @param perm The permission string to check
 	 */
-	protected void updatePlayerList(String perm) {
-		playerList = new ArrayList<>(PermissionsManager.getOnlinePlayersWithPerm(perm));
+	protected void updatePlayerList() {
+		playerList = new ArrayList<>(PermissionsManager.getOnlinePlayersWithPerm(permission));
 
 		for (Player player : playerList) {
 			delayedChat.put(player.getUniqueId(), new LinkedList<>());
