@@ -8,7 +8,9 @@ package com.kingcreator11.discouragementplugin;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.Permissible;
 import org.bukkit.permissions.PermissionAttachmentInfo;
@@ -49,10 +51,11 @@ public class PermissionsManager {
 
 	/**
 	 * Gets a list of all players with a permission
+	 * @param perm The permission to check for
 	 * @return The list of players with the permission
 	 */
-	public static List<Player> getPlayersWithPerm() {
-		return null;
+	public static List<Player> getOnlinePlayersWithPerm(String perm) {
+		return Bukkit.getOnlinePlayers().stream().filter(p -> p.hasPermission(perm)).collect(Collectors.toList());
 	}
 
 	/**
@@ -220,7 +223,7 @@ public class PermissionsManager {
 			if (attachment == null) continue;
 			// If the attachment isn't from this plugin we can ignore it
 			if (attachment.getPlugin() != plugin) continue;
-			
+
 			found = true;
 			// Set the permission
 			attachment.setPermission(perm, value);

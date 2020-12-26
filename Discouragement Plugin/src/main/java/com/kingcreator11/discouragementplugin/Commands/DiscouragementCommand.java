@@ -9,6 +9,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.kingcreator11.discouragementplugin.DiscouragementLvl1;
+import com.kingcreator11.discouragementplugin.DiscouragementLvl2;
+import com.kingcreator11.discouragementplugin.DiscouragementLvl3;
 import com.kingcreator11.discouragementplugin.PermissionsManager;
 
 import org.bukkit.Bukkit;
@@ -119,8 +122,15 @@ public class DiscouragementCommand implements CommandExecutor, TabCompleter {
 			PermissionsManager.setPerm(player, discouragementPerms[i], false);
 		}
 
+		// Send remove message
 		if (args[0].equals("remove")) {
 			sender.sendMessage("§2Reset discouragement permissions for "+player.getPlayerListName());
+			// Remove player from all levels of discouragement
+			// Calling .removePlayer on a player which isn't in the list will not cause error
+			// Since the implementation uses ArrayList.remove()
+			DiscouragementLvl1.instance.removePlayer(player);
+			DiscouragementLvl2.instance.removePlayer(player);
+			DiscouragementLvl3.instance.removePlayer(player);
 			return true;
 		}
 
@@ -130,6 +140,11 @@ public class DiscouragementCommand implements CommandExecutor, TabCompleter {
 			if (!commands[i].equals(args[0])) continue;
 			// Set the permission to be true for the correct command
 			PermissionsManager.setPerm(player, discouragementPerms[i], true);
+			
+			if (i == 0) DiscouragementLvl1.instance.addPlayer(player);
+			if (i == 1) DiscouragementLvl2.instance.addPlayer(player);
+			if (i == 2) DiscouragementLvl3.instance.addPlayer(player);
+
 			sender.sendMessage("§2Set discouragement level "+(i+1)+" for "+player.getPlayerListName());
 		}
 

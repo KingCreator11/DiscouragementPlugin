@@ -14,9 +14,22 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class App extends JavaPlugin {
 	@Override
 	public void onEnable() {
+		// Log enabled message
 		getLogger().info("Discouragement Plugin Enabled");
+		// Setup perm manager
 		PermissionsManager.setPlugin(this);
+		// Setup command
 		this.getCommand("discouragement").setExecutor(new DiscouragementCommand());
+
+		// Setup discouragement levels
+		DiscouragementLvl1.instance = new DiscouragementLvl1();
+		DiscouragementLvl2.instance = new DiscouragementLvl2();
+		DiscouragementLvl3.instance = new DiscouragementLvl3();
+
+		// Setup event listeners
+		getServer().getPluginManager().registerEvents(DiscouragementLvl1.instance, this);
+		getServer().getPluginManager().registerEvents(DiscouragementLvl2.instance, this);
+		getServer().getPluginManager().registerEvents(DiscouragementLvl3.instance, this);
 	}
 	
 	@Override

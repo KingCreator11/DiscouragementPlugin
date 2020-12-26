@@ -14,8 +14,7 @@ Have annoying players on your spigot minecraft server which you just can't seem 
 | /discouragement remove Username | Removes all levels of discouragement from a given user | discouragement.command.remove |
 
 ## Discouragement levels
-**Note:** Adding discouragement permissions manually using permission plugins will not make the discouragement take effect until a plugin restart. Instead use the commands to add discouragement to a user.  
-**Also Note:** Adding multiple discouragement permissions will use the highest level.
+**Note:** Adding discouragement permissions manually using permission plugins will not make the discouragement take effect until a plugin restart. Instead use the commands to add discouragement to a user.
 | Level | Description | Permission |
 |-------|-------------|------------|
 | 1 | Chat messages will be delayed by 0-5 seconds at random | discouragement.level.1 |
