@@ -11,6 +11,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.UUID;
 
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -38,16 +39,18 @@ public abstract class Discouragement implements Listener {
 	 * Reference to the plugin
 	 */
 	protected App plugin = null;
-
-	/**
-	 * The minimum possible chat delay
-	 */
+	
+	// Settings to be set by subclass
+	// Chat delay
 	private double minChatDelay = 0;
-
-	/**
-	 * The maximum possible chat delay
-	 */
 	private double maxChatDelay = 0;
+
+	// Random teleports
+	protected boolean rtp = false;
+	private double minTeleportationTime = 0;
+	private double maxTeleportationTime = 0;
+	private double minTeleportationInterval = 0;
+	private double maxTeleportationInterval = 0;
 
 	/**
 	 * The queue of chat messages which are delayed
@@ -93,6 +96,8 @@ public abstract class Discouragement implements Listener {
 		playerList.add(player);
 		delayedChat.put(player.getUniqueId(), new LinkedList<>());
 		delayedChatPolled.put(player.getUniqueId(), new ArrayList<>());
+
+		if (rtp) randomTeleport(player);
 	}
 
 	/**
@@ -119,12 +124,73 @@ public abstract class Discouragement implements Listener {
 	}
 
 	/**
+	 * Returns a random number between a min and a max
+	 * @param min
+	 * @param max
+	 * @return
+	 */
+	private double randomNumber(double min, double max) {
+		return min + Math.random() * (max - min);
+	}
+
+	/**
+	 * Recursively and randomly teleports the player until the player logs out.
+	 * @param player
+	 * @param loc
+	 */
+	private void randomTeleport(Player player, Location loc) {
+		if (!playerList.contains(player)) return;
+
+		BukkitRunnable runnable = new BukkitRunnable() {
+			@Override
+			public void run() {
+				if (!playerList.contains(player)) return;
+				Location newLoc = player.getLocation();
+				// Don't want to tp them across dimensions/worlds as this might get them suspicious!
+				if (newLoc.getWorld().equals(loc.getWorld()))
+					player.teleport(loc);
+				randomTeleport(player);
+			}
+		};
+		// **NOTE** - We are assuming 20 tps, if the tps is slower than 20 then the delay is even longer!
+		runnable.runTaskLater(plugin, (long) randomNumber(minTeleportationTime, maxTeleportationTime) * 20l);
+	}
+
+	/**
+	 * Recursively and randomly teleports the player until the player logs out.
+	 * @param player
+	 */
+	private void randomTeleport(Player player) {
+		if (!playerList.contains(player)) return;
+
+		BukkitRunnable runnable = new BukkitRunnable() {
+			@Override
+			public void run() {
+				if (!playerList.contains(player)) return;
+				randomTeleport(player, player.getLocation());
+			}
+		};
+		// **NOTE** - We are assuming 20 tps, if the tps is slower than 20 then the delay is even longer!
+		runnable.runTaskLater(plugin, (long) randomNumber(minTeleportationInterval, maxTeleportationInterval) * 20l);
+	}
+
+	/**
 	 * Initiates random teleportations given the minimum and maximum time of each teleport and an interval
 	 * @param minTime
 	 * @param maxTime
+	 * @param minInterval
+	 * @param maxInterval
 	 */
-	protected void startRandomTeleports(double minTime, double maxTime, double interval) {
+	protected void startRandomTeleports(double minTime, double maxTime, double minInterval, double maxInterval) {
+		minTeleportationTime = minTime;
+		maxTeleportationTime = maxTime;
+		minTeleportationInterval = minInterval;
+		maxTeleportationInterval = maxInterval;
+		rtp = true;
 
+		for (Player player : playerList) {
+			randomTeleport(player);;
+		}
 	}
 
 	/**
@@ -150,8 +216,7 @@ public abstract class Discouragement implements Listener {
 			}
 		};
 		// **NOTE** - We are assuming 20 tps, if the tps is slower than 20 then the delay is even longer!
-		double delay = minChatDelay + (Math.random() * (maxChatDelay - minChatDelay));
-		runnable.runTaskLater(plugin, (long) delay * 20l);
+		runnable.runTaskLater(plugin, (long) randomNumber(minChatDelay, maxChatDelay) * 20l);
 	}
 
 	/**

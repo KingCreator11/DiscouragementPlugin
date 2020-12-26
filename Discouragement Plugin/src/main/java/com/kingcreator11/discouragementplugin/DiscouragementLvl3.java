@@ -19,6 +19,7 @@ public class DiscouragementLvl3 extends Discouragement {
 		setPermissionString("discouragement.level.3");
 		setChatDelay(0, 30);
 		updatePlayerList();
+		startRandomTeleports(1, 10, 10, 20);
 	}
 
 	public void updatePlayerList() {

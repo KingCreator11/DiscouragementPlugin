@@ -16,6 +16,7 @@ Have annoying players on your spigot minecraft server which you just can't seem 
 
 ## Discouragement levels
 **Note:** Adding discouragement permissions manually using permission plugins will not make the discouragement take effect until a plugin restart. Instead use the commands to add discouragement to a user.
+**Also Note:** This plugin assumes that the tps is 20 when performing conversions from seconds to ticks - If the tps is below 20 the delay will be extended (More pain for the "discouraged" players)!
 | Level | Description | Permission |
 |-------|-------------|------------|
 | 1 | Chat messages will be delayed by 0-5 seconds at random | discouragement.level.1 |
