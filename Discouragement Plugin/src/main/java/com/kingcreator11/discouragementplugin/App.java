@@ -22,9 +22,9 @@ public class App extends JavaPlugin {
 		this.getCommand("discouragement").setExecutor(new DiscouragementCommand());
 
 		// Setup discouragement levels
-		DiscouragementLvl1.instance = new DiscouragementLvl1();
-		DiscouragementLvl2.instance = new DiscouragementLvl2();
-		DiscouragementLvl3.instance = new DiscouragementLvl3();
+		DiscouragementLvl1.instance = new DiscouragementLvl1(this);
+		DiscouragementLvl2.instance = new DiscouragementLvl2(this);
+		DiscouragementLvl3.instance = new DiscouragementLvl3(this);
 
 		// Setup event listeners
 		getServer().getPluginManager().registerEvents(DiscouragementLvl1.instance, this);

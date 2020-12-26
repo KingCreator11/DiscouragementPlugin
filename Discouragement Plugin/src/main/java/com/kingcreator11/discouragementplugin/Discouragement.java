@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
@@ -28,9 +30,29 @@ public abstract class Discouragement implements Listener {
 	private String permission = null;
 
 	/**
-	 * An instance of this class to use throughout the plugin
+	 * Reference to the plugin
 	 */
-	public static Discouragement instance = null;
+	protected App plugin = null;
+
+	/**
+	 * The minimum possible chat delay
+	 */
+	private int minChatDelay = 0;
+
+	/**
+	 * The maximum possible chat delay
+	 */
+	private int maxChatDelay = 0;
+
+	/**
+	 * Sets the chat delay range
+	 * @param min
+	 * @param max
+	 */
+	protected void setChatDelay(int min, int max) {
+		this.minChatDelay = min;
+		this.maxChatDelay = max;
+	}
 
 	/**
 	 * Gets the permission string of this discouragement level
@@ -79,8 +101,12 @@ public abstract class Discouragement implements Listener {
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		Player player = event.getPlayer();
-		if (player.hasPermission(permission))
+		System.out.println(player.getPlayerListName());
+		System.out.println(permission);
+		System.out.println(player.hasPermission(permission));
+		if (player.hasPermission(permission)) {
 			addPlayer(player);
+		}
 	}
 
 	/**
@@ -90,5 +116,35 @@ public abstract class Discouragement implements Listener {
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent event) {
 		removePlayer(event.getPlayer());
+	}
+
+	/**
+	 * Chat event handler
+	 * @param event
+	 */
+	@EventHandler
+	public void onAsyncPlayerChat(AsyncPlayerChatEvent event) {
+		Player player = event.getPlayer();
+		if (!this.playerList.contains(player)) return;
+
+		// Cancel the event
+		event.setCancelled(true);
+
+		System.out.println(event.getMessage());
+	}
+
+	/**
+	 * Command event handler
+	 * @param event
+	 */
+	@EventHandler
+	public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
+		Player player = event.getPlayer();
+		if (!this.playerList.contains(player)) return;
+
+		// Cancel the event
+		event.setCancelled(true);
+
+		System.out.println(event.getMessage());
 	}
 }

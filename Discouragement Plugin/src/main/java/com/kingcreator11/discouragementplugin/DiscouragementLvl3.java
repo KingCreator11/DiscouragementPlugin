@@ -9,9 +9,15 @@ package com.kingcreator11.discouragementplugin;
  * Level 3 of discouragement implementation
  */
 public class DiscouragementLvl3 extends Discouragement {
-	
-	public DiscouragementLvl3() {
+	/**
+	 * An instance of this class to use throughout the plugin
+	 */
+	public static DiscouragementLvl3 instance = null;
+
+	public DiscouragementLvl3(App plugin) {
+		this.plugin = plugin;
 		setPermissionString("discouragement.level.3");
+		setChatDelay(0, 30);
 		updatePlayerList();
 	}
 
