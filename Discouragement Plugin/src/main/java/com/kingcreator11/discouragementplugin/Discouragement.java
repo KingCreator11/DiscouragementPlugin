@@ -6,8 +6,10 @@
 package com.kingcreator11.discouragementplugin;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.UUID;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -50,12 +52,12 @@ public abstract class Discouragement implements Listener {
 	/**
 	 * The queue of chat messages which are delayed
 	 */
-	private Queue<String> delayedChat = new LinkedList<>();
+	private HashMap<UUID, Queue<String>> delayedChat = new HashMap<>();
 
 	/**
 	 * The polled chat messages
 	 */
-	private ArrayList<String> delayedChatPolled = new ArrayList<>();
+	private HashMap<UUID, ArrayList<String>> delayedChatPolled = new HashMap<>();
 
 	/**
 	 * Sets the chat delay range
@@ -89,6 +91,8 @@ public abstract class Discouragement implements Listener {
 	 */
 	public void addPlayer(Player player) {
 		playerList.add(player);
+		delayedChat.put(player.getUniqueId(), new LinkedList<>());
+		delayedChatPolled.put(player.getUniqueId(), new ArrayList<>());
 	}
 
 	/**
@@ -97,6 +101,8 @@ public abstract class Discouragement implements Listener {
 	 */
 	public void removePlayer(Player player) {
 		playerList.remove(player);
+		delayedChat.remove(player.getUniqueId());
+		delayedChatPolled.remove(player.getUniqueId());
 	}
 
 	/**
@@ -105,6 +111,11 @@ public abstract class Discouragement implements Listener {
 	 */
 	protected void updatePlayerList(String perm) {
 		playerList = new ArrayList<>(PermissionsManager.getOnlinePlayersWithPerm(perm));
+
+		for (Player player : playerList) {
+			delayedChat.put(player.getUniqueId(), new LinkedList<>());
+			delayedChatPolled.put(player.getUniqueId(), new ArrayList<>());
+		}
 	}
 
 	/**
@@ -113,14 +124,20 @@ public abstract class Discouragement implements Listener {
 	 * @param message
 	 */
 	private void delayedChatMessage(Player player, String message) {
-		delayedChat.add(message);
+		Queue<String> playerQueue = delayedChat.get(player.getUniqueId());
+		if (playerQueue == null) return;
+		playerQueue.add(message);
 
 		BukkitRunnable runnable = new BukkitRunnable() {
 			@Override
 			public void run() {
-				String polled = delayedChat.poll();
+				Queue<String> playerQueue = delayedChat.get(player.getUniqueId());
+				if (playerQueue == null) return;
+				ArrayList<String> playerPolled = delayedChatPolled.get(player.getUniqueId());
+				if (playerPolled == null) return;
+				String polled = playerQueue.poll();
 				player.chat(polled);
-				delayedChatPolled.add(polled);
+				playerPolled.add(polled);
 			}
 		};
 		// **NOTE** - We are assuming 20 tps, if the tps is slower than 20 then the delay is even longer!
@@ -158,10 +175,13 @@ public abstract class Discouragement implements Listener {
 		Player player = event.getPlayer();
 		if (!this.playerList.contains(player)) return;
 
+		ArrayList<String> playerPolled = delayedChatPolled.get(player.getUniqueId());
+		if (playerPolled == null) return;
+
 		// Checking that the message isn't a delayed message from the computer
 		String message = event.getMessage();
-		if (delayedChatPolled.contains(message)) {
-			delayedChatPolled.remove(message);
+		if (playerPolled.contains(message)) {
+			playerPolled.remove(message);
 			return;
 		}
 
@@ -180,10 +200,13 @@ public abstract class Discouragement implements Listener {
 		Player player = event.getPlayer();
 		if (!this.playerList.contains(player)) return;
 
+		ArrayList<String> playerPolled = delayedChatPolled.get(player.getUniqueId());
+		if (playerPolled == null) return;
+
 		// Checking that the message isn't a delayed message from the computer
 		String message = event.getMessage();
-		if (delayedChatPolled.contains(message)) {
-			delayedChatPolled.remove(message);
+		if (playerPolled.contains(message)) {
+			playerPolled.remove(message);
 			return;
 		}
 
