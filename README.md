@@ -19,5 +19,5 @@ Have annoying players on your spigot minecraft server which you just can't seem 
 | Level | Description | Permission |
 |-------|-------------|------------|
 | 1 | Chat messages will be delayed by 0-5 seconds at random | discouragement.level.1 |
-| 2 | Chat messages will be delayed by 0-15 seconds at random and will randomly tp the user to their location from 1-10 seconds prior. | discouragement.level.2 |
-| 3 | Chat messages will be delayed by 0-30 seconds at random and will randomly tp the user to their location from 1-10 seconds prior. Blocks placement will fail 50% of the time as will block breaking. | discouragement.level.3 |
+| 2 | Chat messages will be delayed by 0-15 seconds at random and will randomly tp the user to their location from 1-10 seconds prior every 20-30 seconds. | discouragement.level.2 |
+| 3 | Chat messages will be delayed by 0-30 seconds at random and will randomly tp the user to their location from 1-10 seconds prior every 10-20 seconds. Blocks placement will fail 50% of the time as will block breaking. | discouragement.level.3 |

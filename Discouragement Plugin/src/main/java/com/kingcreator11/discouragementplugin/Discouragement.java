@@ -119,6 +119,15 @@ public abstract class Discouragement implements Listener {
 	}
 
 	/**
+	 * Initiates random teleportations given the minimum and maximum time of each teleport and an interval
+	 * @param minTime
+	 * @param maxTime
+	 */
+	protected void startRandomTeleports(double minTime, double maxTime, double interval) {
+
+	}
+
+	/**
 	 * Makes the player say a message at a random interval between the chat delay
 	 * @param player
 	 * @param message
